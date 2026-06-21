@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+.claude/skills/ui-ux-pro-max/scripts/__pycache__/
