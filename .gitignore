@@ -3,4 +3,5 @@ dist/
 .env
 .env.local
 *.log
+coverage/
 .claude/skills/ui-ux-pro-max/scripts/__pycache__/

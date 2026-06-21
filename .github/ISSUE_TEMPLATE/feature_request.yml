@@ -1,0 +1,30 @@
+name: Permintaan Fitur
+description: Usulkan fitur baru untuk POS-RK
+labels: ['enhancement']
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Masalah yang Ingin Diselesaikan
+      description: Ceritakan masalah atau kebutuhan yang mendorong permintaan fitur ini.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solusi yang Diusulkan
+      description: Bagaimana fitur ini seharusnya bekerja?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioritas
+      options:
+        - Rendah (nice to have)
+        - Sedang (membantu tapi bisa ditunda)
+        - Tinggi (dibutuhkan segera)
+    validations:
+      required: true
