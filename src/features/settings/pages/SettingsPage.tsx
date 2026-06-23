@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { CheckCircle2 } from 'lucide-react'
+import { CheckCircle2, Loader2, Wifi, WifiOff } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { Label } from '@/shared/components/ui/label'
 import { useSettingsStore } from '../store/useSettingsStore'
 import type { StoreSettings } from '../store/useSettingsStore'
+import { supabase } from '@/lib/supabase'
 import type * as React from 'react'
 
 const settingsSchema = z.object({
@@ -52,6 +53,65 @@ function Field({
       {children}
       {hint && !error && <p className="text-xs text-muted-foreground">{hint}</p>}
       {error && <p className="text-xs text-destructive">{error}</p>}
+    </div>
+  )
+}
+
+type TestStatus = 'idle' | 'loading' | 'success' | 'error'
+
+function SupabaseConnectionTest() {
+  const [status, setStatus] = useState<TestStatus>('idle')
+  const [message, setMessage] = useState('')
+
+  async function runTest() {
+    setStatus('loading')
+    setMessage('')
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .insert({ name: 'Contoh Kategori', description: 'Tes koneksi Supabase', sort_order: 0 })
+        .select('id, name')
+        .single()
+
+      if (error) throw error
+
+      setStatus('success')
+      setMessage(
+        `Berhasil! Kategori "${data.name}" tersimpan (id: ${String(data.id).slice(0, 8)}…)`,
+      )
+    } catch (e) {
+      setStatus('error')
+      setMessage(e instanceof Error ? e.message : 'Koneksi gagal')
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => void runTest()}
+        disabled={status === 'loading'}
+      >
+        {status === 'loading' && <Loader2 size={15} className="animate-spin" />}
+        {status === 'idle' && <Wifi size={15} />}
+        {status === 'success' && <Wifi size={15} className="text-green-600" />}
+        {status === 'error' && <WifiOff size={15} className="text-destructive" />}
+        Tes Koneksi Supabase
+      </Button>
+
+      {status === 'success' && (
+        <p className="flex items-center gap-1.5 text-sm text-green-600">
+          <CheckCircle2 size={14} />
+          {message}
+        </p>
+      )}
+      {status === 'error' && (
+        <div className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          <p className="font-medium">Koneksi gagal</p>
+          <p className="mt-0.5 text-xs opacity-80">{message}</p>
+        </div>
+      )}
     </div>
   )
 }
@@ -169,6 +229,16 @@ export default function SettingsPage() {
           )}
         </div>
       </form>
+
+      <div className="mt-5 max-w-lg">
+        <Section title="Tes Koneksi Supabase">
+          <p className="text-sm text-muted-foreground">
+            Klik tombol di bawah untuk insert 1 kategori contoh ke Supabase dan memverifikasi
+            koneksi database berjalan.
+          </p>
+          <SupabaseConnectionTest />
+        </Section>
+      </div>
     </div>
   )
 }
