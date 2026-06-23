@@ -88,10 +88,10 @@ describe('buildReportData', () => {
       makeItem({ productName: 'Kopi', subtotal: 5000, quantity: 1 }),
     ]
     const { topProducts } = buildReportData([], items)
-    expect(topProducts[0].productName).toBe('Kopi')
-    expect(topProducts[0].revenue).toBe(20000)
-    expect(topProducts[0].quantity).toBe(4)
-    expect(topProducts[1].productName).toBe('Teh')
+    expect(topProducts[0]?.productName).toBe('Kopi')
+    expect(topProducts[0]?.revenue).toBe(20000)
+    expect(topProducts[0]?.quantity).toBe(4)
+    expect(topProducts[1]?.productName).toBe('Teh')
   })
 
   it('groups payment stats by method', () => {
