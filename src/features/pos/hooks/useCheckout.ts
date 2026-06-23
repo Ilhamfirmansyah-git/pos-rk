@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { db, withDbError } from '@/db'
 import { generateReceiptNumber } from '@/shared/lib/formatters'
+import { useSettingsStore } from '@/features/settings/store/useSettingsStore'
 import { StockLogType, TransactionStatus } from '@/shared/types'
 import type { CartItem, CartTotals, PaymentMethod } from '@/shared/types'
 
@@ -15,6 +16,7 @@ interface CheckoutParams {
 export function useCheckout() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const cashierName = useSettingsStore((state) => state.cashierName)
 
   async function checkout(params: CheckoutParams): Promise<string | null> {
     setIsLoading(true)
@@ -34,7 +36,7 @@ export function useCheckout() {
                 uuid: transactionUuid,
                 receiptNumber,
                 cashierId: 'default',
-                cashierName: 'Kasir',
+                cashierName,
                 subtotal: params.totals.subtotal,
                 discountAmount: params.totals.discountAmount,
                 taxAmount: params.totals.taxAmount,
@@ -84,7 +86,7 @@ export function useCheckout() {
                     quantityAfter: newStock,
                     referenceId: transactionUuid,
                     notes: null,
-                    performedBy: 'Kasir',
+                    performedBy: cashierName,
                     createdAt: now,
                     syncedAt: null,
                   })

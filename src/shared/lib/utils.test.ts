@@ -28,3 +28,23 @@ describe('cn()', () => {
     expect(cn({ 'bg-primary': true, 'bg-gray-100': false })).toBe('bg-primary')
   })
 })
+
+import { formatCompactNumber } from './formatters'
+
+describe('formatCompactNumber()', () => {
+  it('formats millions with jt suffix', () => {
+    expect(formatCompactNumber(1_500_000)).toBe('1.5jt')
+  })
+
+  it('formats thousands with rb suffix', () => {
+    expect(formatCompactNumber(50_000)).toBe('50rb')
+  })
+
+  it('returns plain number for values under 1000', () => {
+    expect(formatCompactNumber(500)).toBe('500')
+  })
+
+  it('rounds thousands correctly', () => {
+    expect(formatCompactNumber(1_450)).toBe('1rb')
+  })
+})

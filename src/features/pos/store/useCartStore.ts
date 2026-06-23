@@ -10,6 +10,7 @@ interface CartState {
   updateQty: (productId: string, quantity: number) => void
   removeItem: (productId: string) => void
   setDiscount: (amount: number) => void
+  setTaxRate: (rate: number) => void
   clearCart: () => void
   getTotals: () => CartTotals
 }
@@ -61,6 +62,10 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   setDiscount(amount) {
     set({ discountAmount: Math.max(0, amount) })
+  },
+
+  setTaxRate(rate) {
+    set({ taxRate: Math.min(100, Math.max(0, rate)) })
   },
 
   clearCart() {
