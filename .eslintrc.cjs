@@ -64,6 +64,13 @@ module.exports = {
       },
     },
     {
+      // shadcn-style UI components export both components and variant constants — expected
+      files: ['src/shared/components/ui/**'],
+      rules: {
+        'react-refresh/only-export-components': 'off',
+      },
+    },
+    {
       files: ['*.cjs', '*.config.*'],
       env: { node: true },
       rules: {
